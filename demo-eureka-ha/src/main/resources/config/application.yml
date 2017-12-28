@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: peer2
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true

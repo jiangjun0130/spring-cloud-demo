@@ -1,0 +1,30 @@
+server:
+  port: 8040
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://user:password@localhost:8761/eureka/,http://user:password@localhost:8762/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+
+spring:
+  application:
+    name: gateway-zuul
+
+# serviceId进行更细粒度的控制
+zuul:
+  prefix: /api
+  routes:
+    provider: # 唯一即可
+      path: /providers/**
+      # serviceId: application.name
+      serviceId: eureka-provider
+
+security:
+  basic:
+    enabled: true
+  user:
+    name: user
+    password: password

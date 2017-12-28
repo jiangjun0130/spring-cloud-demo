@@ -1,0 +1,35 @@
+server:
+  port: 8040
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://user:password@localhost:8761/eureka/,http://user:password@localhost:8762/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+
+spring:
+  application:
+    name: gateway-zuul-fallback
+
+zuul:
+  prefix: /api
+  # 不方向代理其他服务，只代理routes配置的服务
+  #ignoredServices: '*'
+  # 不代理指定的服务
+  #ignoredServices: eureka-consumer-feign-with-hystrix
+  # 不配置routes时，prefix为 application.name属性。如：http://10.66.19.61:8040/api/eureka-consumer-feign-with-hystrix/findById/1
+  routes:
+    eureka-provider-v1: /provider/**
+    #eureka-consumer-feign-with-hystrix: /consumer/**
+    # 测试通过feign 通过sidecar调用异构服务
+    eureka-consumer-feign: /consumer-feign/**
+
+
+security:
+  basic:
+    enabled: true
+  user:
+    name: user
+    password: password

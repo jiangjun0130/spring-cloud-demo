@@ -1,0 +1,31 @@
+server:
+  port: 8040
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://user:password@localhost:8761/eureka/,http://user:password@localhost:8762/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+
+spring:
+  application:
+    name: gateway-zuul
+
+# url进行更细粒度的控制
+# url-routes 不会执行HystrixCommand ，也不会loadbalance multiple URLs with Ribbon
+zuul:
+  prefix: /api
+  routes:
+    provider: # 唯一即可
+      path: /provider-url/**
+      # serviceId: application.name
+      url: http://10.66.19.61:7900
+
+security:
+  basic:
+    enabled: true
+  user:
+    name: user
+    password: password
